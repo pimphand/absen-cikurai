@@ -39,9 +39,11 @@ class AbsenController extends Controller
             ->where('attendance_date', $attendanceDate)
             ->first();
 
-        if ($attendance) {
-            return response()->json(['message' => 'You have already checked in for today'], 400);
-        }
+       if (env('APP_DEBUG') === false) {
+           if ($attendance) {
+               return response()->json(['message' => 'You have already checked in for today'], 400);
+           }
+       }
 
         $checkInTime = now();
         $officeStartTime = Carbon::createFromTime(9, 0, 0); // Jam masuk kantor, misalnya 09:00 pagi
