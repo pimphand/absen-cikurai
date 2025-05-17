@@ -108,7 +108,7 @@ class AbsenController extends Controller
     {
         return response()->json([
             'message' => 'Absen list',
-            'data' => Auth::user()->attendance()->sortBy('created_at','desc')->paginate(10),
+            'data' => Auth::user()->attendance()->orderBy('created_at','desc')->paginate(10),
         ]);
     }
 
