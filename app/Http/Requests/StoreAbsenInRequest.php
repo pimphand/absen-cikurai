@@ -24,6 +24,7 @@ class StoreAbsenInRequest extends FormRequest
         return [
             'latitude_check_in' => 'required',
             'longitude_check_in' => 'required',
+            'jarak' => 'required',
             'photo_check_in' => 'required|image|mimes:jpeg,png,jpg,gif',
         ];
     }
@@ -38,6 +39,7 @@ class StoreAbsenInRequest extends FormRequest
         return [
             'latitude_check_in.required' => 'latitude tidk boleh kosong',
             'longitude_check_in.required' => 'longitude tidak boleh kosong',
+            'jarak.required' => 'jarak tidak boleh kosong',
             'photo_check_in.required' => 'Foto tidak boleh kosong',
             'photo_check_in.image' => 'File harus berupa gambar',
             'photo_check_in.mimes' => 'File harus berupa gambar dengan format jpeg, png, jpg, atau gif',
