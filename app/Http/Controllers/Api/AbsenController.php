@@ -148,26 +148,26 @@ class AbsenController extends Controller
             $status = 'Terlambat';
         }
 
-        // Get the uploaded image
-        $image = $request->file('photo_check_in');
-        $imagePath = $image->store('checkin', 'public');
-        $fullPath = storage_path('app/public/' . $imagePath);
-
-        // Add watermark to the image
-        try {
-            $watermarkText = "CMI\nLat: " . $request->latitude_check_in .
-                "\nLong: " . $request->longitude_check_in .
-                "\nJarak: " . $request->jarak . "M";
-
-            $this->addWatermark($fullPath, $watermarkText);
-
-            // Verify the file exists after watermarking
-            if (!file_exists($fullPath)) {
-                \Log::error('Watermarked image file does not exist: ' . $fullPath);
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error applying watermark: ' . $e->getMessage());
-        }
+//        // Get the uploaded image
+//        $image = $request->file('photo_check_in');
+//        $imagePath = $image->store('checkin', 'public');
+//        $fullPath = storage_path('app/public/' . $imagePath);
+//
+//        // Add watermark to the image
+//        try {
+//            $watermarkText = "CMI\nLat: " . $request->latitude_check_in .
+//                "\nLong: " . $request->longitude_check_in .
+//                "\nJarak: " . $request->jarak . "M";
+//
+//            $this->addWatermark($fullPath, $watermarkText);
+//
+//            // Verify the file exists after watermarking
+//            if (!file_exists($fullPath)) {
+//                \Log::error('Watermarked image file does not exist: ' . $fullPath);
+//            }
+//        } catch (\Exception $e) {
+//            \Log::error('Error applying watermark: ' . $e->getMessage());
+//        }
 
         $user->attendance()->create([
             'attendance_date' => $attendanceDate,
@@ -175,7 +175,7 @@ class AbsenController extends Controller
             'latitude_check_in' => $request->latitude_check_in,
             'longitude_check_in' => $request->longitude_check_in,
             'status_check_in' => $status,
-            'photo_check_in' => $imagePath,
+//            'photo_check_in' => $imagePath,
         ]);
 
         return response()->json([
