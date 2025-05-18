@@ -198,7 +198,37 @@ class AbsenController extends Controller
      */
     public function update(Request $request, Absen $absen)
     {
-        //
+        $user = Auth::user();
+        if ($user->is_active === 0) {
+            return response()->json(['message' => 'User is not active'], 400);
+        }
+
+        if ($absen->user_id !== $user->id) {
+            return response()->json(['message' => 'You are not authorized to update this attendance'], 403);
+        }
+
+        $attendanceDate = now()->toDateString();
+        $attendance = Absen::where('user_id', $user->id)
+            ->where('attendance_date', $attendanceDate)
+            ->first();
+        if (!$attendance) {
+            return response()->json(['message' => 'You have not checked in for today'], 400);
+        }
+
+        if ($absen->check_out) {
+            return response()->json(['message' => 'You have already checked out for today'], 400);
+        }
+
+        $absen->update([
+            'check_out' => now()->toTimeString(),
+            'latitude_check_out' => $request->latitude_check_out,
+            'longitude_check_out' => $request->longitude_check_out,
+            'status_check_out' => $request->status_check_out,
+        ]);
+
+        return response()->json([
+            'message' => 'Absen Pulang berhasil',
+        ]);
     }
 
     /**
