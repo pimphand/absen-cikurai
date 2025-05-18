@@ -106,9 +106,14 @@ class AbsenController extends Controller
      */
     public function index()
     {
+        $user = Auth::user()->attendance()->orderBy('created_at','desc')->paginate(10);
         return response()->json([
             'message' => 'Absen list',
-            'data' => Auth::user()->attendance()->orderBy('created_at','desc')->paginate(10),
+            'data' => $user,
+            'absen_count' => [
+                'late' => Auth::user()->attendance()->where('status_check_in', 'Terlambat')->count(),
+                'present' => Auth::user()->attendance()->where('status_check_in', 'Sudah Absen')->count(),
+            ]
         ]);
     }
 
