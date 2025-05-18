@@ -25,7 +25,7 @@ class StoreAbsenInRequest extends FormRequest
             'latitude_check_in' => 'required',
             'longitude_check_in' => 'required',
             'jarak' => 'required',
-            'photo_check_in' => 'required|image|mimes:jpeg,png,jpg,gif',
+//            'photo_check_in' => 'required|image|mimes:jpeg,png,jpg,gif',
         ];
     }
 
