@@ -181,7 +181,7 @@ class AbsenController extends Controller
         return response()->json([
             'message' => 'Absen berhasil',
             'watermark_applied' => true,
-            'image_path' => $imagePath
+//            'image_path' => $imagePath
         ]);
     }
 
