@@ -223,8 +223,7 @@ class AbsenController extends Controller
             'check_out' => now()->toTimeString(),
             'latitude_check_out' => $request->latitude_check_out,
             'longitude_check_out' => $request->longitude_check_out,
-            'status_check_out' => $request->status_check_out,
-            'status_check_out' => 'Pulang',
+            'status_check_out' => "Pulang",
         ]);
 
         return response()->json([
