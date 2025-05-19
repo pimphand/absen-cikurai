@@ -34,7 +34,7 @@ class LeaveController extends Controller
     public function store(StoreLeaveRequest $request)
     {
         $leave = Leave::create(array_merge($request->validated(), [
-            'user_id' => Auth::id(),
+            'user_id' => auth()->id(),
             'attachment' => $request->file('attachment') ? $request->file('attachment')->store('attachments') : null,
         ]));
 
