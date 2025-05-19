@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeaveRequest;
 use App\Http\Requests\UpdateLeaveRequest;
 use App\Models\Leave;
+use App\Models\Notification;
 use App\Service\NotificationService;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,6 +87,17 @@ class LeaveController extends Controller
                 $message,
                 $leave->user_id
             );
+
+            // Save notification to database
+            Notification::create([
+                'user_id' => $leave->user_id,
+                'type' => 'leave_status',
+                'title' => 'Status Cuti Diperbarui',
+                'message' => $message,
+                'url' => '/leaves/' . $leave->id,
+                'is_read' => 0,
+                'notifiable_type' => Leave::class,
+            ]);
         }
 
         return response()->json([
