@@ -106,7 +106,7 @@ class AbsenController extends Controller
      */
     public function index()
     {
-        $user = Auth::user()->attendance()->orderBy('created_at','desc')->paginate(10);
+        $user = Auth::user()->attendance()->orderBy('created_at', 'desc')->paginate(10);
         return response()->json([
             'message' => 'Absen list',
             'data' => $user,
@@ -134,11 +134,11 @@ class AbsenController extends Controller
             ->where('attendance_date', $attendanceDate)
             ->first();
 
-       if (env('APP_DEBUG') === false) {
-           if ($attendance) {
-               return response()->json(['message' => 'You have already checked in for today'], 400);
-           }
-       }
+        if (env('APP_DEBUG') === false) {
+            if ($attendance) {
+                return response()->json(['message' => 'You have already checked in for today'], 400);
+            }
+        }
 
         $checkInTime = now();
         $officeStartTime = Carbon::createFromTime(9, 0, 0); // Jam masuk kantor, misalnya 09:00 pagi
@@ -148,26 +148,26 @@ class AbsenController extends Controller
             $status = 'Terlambat';
         }
 
-//        // Get the uploaded image
-//        $image = $request->file('photo_check_in');
-//        $imagePath = $image->store('checkin', 'public');
-//        $fullPath = storage_path('app/public/' . $imagePath);
-//
-//        // Add watermark to the image
-//        try {
-//            $watermarkText = "CMI\nLat: " . $request->latitude_check_in .
-//                "\nLong: " . $request->longitude_check_in .
-//                "\nJarak: " . $request->jarak . "M";
-//
-//            $this->addWatermark($fullPath, $watermarkText);
-//
-//            // Verify the file exists after watermarking
-//            if (!file_exists($fullPath)) {
-//                \Log::error('Watermarked image file does not exist: ' . $fullPath);
-//            }
-//        } catch (\Exception $e) {
-//            \Log::error('Error applying watermark: ' . $e->getMessage());
-//        }
+        //        // Get the uploaded image
+        //        $image = $request->file('photo_check_in');
+        //        $imagePath = $image->store('checkin', 'public');
+        //        $fullPath = storage_path('app/public/' . $imagePath);
+        //
+        //        // Add watermark to the image
+        //        try {
+        //            $watermarkText = "CMI\nLat: " . $request->latitude_check_in .
+        //                "\nLong: " . $request->longitude_check_in .
+        //                "\nJarak: " . $request->jarak . "M";
+        //
+        //            $this->addWatermark($fullPath, $watermarkText);
+        //
+        //            // Verify the file exists after watermarking
+        //            if (!file_exists($fullPath)) {
+        //                \Log::error('Watermarked image file does not exist: ' . $fullPath);
+        //            }
+        //        } catch (\Exception $e) {
+        //            \Log::error('Error applying watermark: ' . $e->getMessage());
+        //        }
 
         $user->attendance()->create([
             'attendance_date' => $attendanceDate,
@@ -175,13 +175,13 @@ class AbsenController extends Controller
             'latitude_check_in' => $request->latitude_check_in,
             'longitude_check_in' => $request->longitude_check_in,
             'status_check_in' => $status,
-//            'photo_check_in' => $imagePath,
+            //            'photo_check_in' => $imagePath,
         ]);
 
         return response()->json([
             'message' => 'Absen berhasil',
             'watermark_applied' => true,
-//            'image_path' => $imagePath
+            //            'image_path' => $imagePath
         ]);
     }
 
