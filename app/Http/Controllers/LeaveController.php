@@ -72,17 +72,14 @@ class LeaveController extends Controller
         $leave->save();
 
         // Ensure we have a valid user_id
-        if ($leave->user_id) {
-            // Send a private notification
-            $notification = new NotificationService();
-            $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+        $notification = new NotificationService();
+        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
 
-            // Send a public notification
-            $notification->send('notification', 'leaves', [
-                'title' => 'Leave Request Updated',
-                'content' => 'A leave request has been updated.',
-            ]);
-        }
+        // Send a public notification
+        $notification->send('notification', 'leaves', [
+            'title' => 'Leave Request Updated',
+            'content' => 'A leave request has been updated.',
+        ]);
 
         return response()->json([
             'message' => 'Leave request updated successfully.',
