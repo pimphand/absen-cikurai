@@ -67,18 +67,19 @@ class LeaveController extends Controller
     public function update(UpdateLeaveRequest $request, Leave $leave)
     {
         $leave->update($request->validated());
-        // Notify the user about the update
-        // Notification::send($leave->user, new LeaveUpdatedNotification($leave));
-        // Send a private notification
-        $notification = new NotificationService();
-        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
-        // Send a public notification
-        $notification->send('notification', 'leaves', [
-            'title' => 'Leave Request Updated',
-            'content' => 'A leave request has been updated.',
-        ]);
-        // Send a private notification to the user
-        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+
+        // Ensure we have a valid user_id
+        if ($leave->user_id) {
+            // Send a private notification
+            $notification = new NotificationService();
+            $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+
+            // Send a public notification
+            $notification->send('notification', 'leaves', [
+                'title' => 'Leave Request Updated',
+                'content' => 'A leave request has been updated.',
+            ]);
+        }
 
         return response()->json([
             'message' => 'Leave request updated successfully.',
