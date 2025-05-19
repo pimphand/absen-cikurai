@@ -53,7 +53,14 @@ class NotificationController extends Controller
      */
     public function update(UpdateNotificationRequest $request, Notification $notification)
     {
-        //
+        $notification->update([
+            'is_read' => true,
+        ]);
+
+        return response()->json([
+            'message' => 'Notification updated successfully.',
+            'notification' => $notification,
+        ]);
     }
 
     /**
