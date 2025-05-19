@@ -64,4 +64,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Absen::class);
     }
+
+    /**
+     * relation to leaves
+     */
+    public function leaves(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Leave::class);
+    }
 }
