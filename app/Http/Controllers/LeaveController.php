@@ -64,13 +64,12 @@ class LeaveController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLeaveRequest $request, Leave $leave)
+    public function update(UpdateLeaveRequest $request, $id)
     {
-        dd($request->all());
+        $leave = Leave::findOrFail($id);
         $leave->update([
             'status' => $request->status,
         ]);
-        $leave->save();
 
         // Ensure we have a valid user_id
         $notification = new NotificationService();
