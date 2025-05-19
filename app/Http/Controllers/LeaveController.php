@@ -66,6 +66,7 @@ class LeaveController extends Controller
      */
     public function update(UpdateLeaveRequest $request, Leave $leave)
     {
+        dd($request->all());
         $leave->update([
             'status' => $request->status,
         ]);
