@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeaveRequest;
 use App\Http\Requests\UpdateLeaveRequest;
 use App\Models\Leave;
+use App\Service\NotificationService;
 use Illuminate\Container\Attributes\Auth;
 
 class LeaveController extends Controller
@@ -66,6 +67,19 @@ class LeaveController extends Controller
     public function update(UpdateLeaveRequest $request, Leave $leave)
     {
         $leave->update($request->validated());
+        // Notify the user about the update
+        // Notification::send($leave->user, new LeaveUpdatedNotification($leave));
+        // Send a private notification
+        $notification = new NotificationService();
+        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+        // Send a public notification
+        $notification->send('notification', 'leaves', [
+            'title' => 'Leave Request Updated',
+            'content' => 'A leave request has been updated.',
+        ]);
+        // Send a private notification to the user
+        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+
         return response()->json([
             'message' => 'Leave request updated successfully.',
             'leave' => $leave,
