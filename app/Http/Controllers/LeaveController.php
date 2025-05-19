@@ -66,7 +66,10 @@ class LeaveController extends Controller
      */
     public function update(UpdateLeaveRequest $request, Leave $leave)
     {
-        $leave->update($request->validated());
+        $leave->update([
+            'status' => $request->status,
+        ]);
+        $leave->save();
 
         // Ensure we have a valid user_id
         if ($leave->user_id) {
