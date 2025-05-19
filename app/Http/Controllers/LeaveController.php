@@ -6,7 +6,7 @@ use App\Http\Requests\StoreLeaveRequest;
 use App\Http\Requests\UpdateLeaveRequest;
 use App\Models\Leave;
 use App\Service\NotificationService;
-use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveController extends Controller
 {
@@ -35,8 +35,8 @@ class LeaveController extends Controller
     public function store(StoreLeaveRequest $request)
     {
         $leave = Leave::create(array_merge($request->validated(), [
-            'user_id' => auth()->id(),
-            'attachment' => $request->file('attachment') ? $request->file('attachment')->store('attachments') : null,
+            'user_id' => Auth::id(),
+            'attachment' => $request->hasFile('attachment') ? $request->file('attachment')->store('attachments') : null,
         ]));
 
         return response()->json([
@@ -68,18 +68,25 @@ class LeaveController extends Controller
     {
         $leave = Leave::findOrFail($id);
         $leave->update([
-            'status' => $request->status,
+            'status' => $request->input('status'),
         ]);
 
-        // Ensure we have a valid user_id
-        $notification = new NotificationService();
-        $notification->sendPrivateNotification('Leave Request Updated', 'Your leave request has been updated.', $leave->user_id);
+        // Send notification to the leave requester
+        if ($leave->user_id) {
+            $notification = new NotificationService();
+            $status = $leave->status;
+            $message = match ($status) {
+                'approved' => 'Pengajuan cuti Anda telah disetujui oleh manajer.',
+                'rejected' => 'Pengajuan cuti Anda telah ditolak oleh manajer.',
+                default => 'Status pengajuan cuti Anda telah diperbarui.'
+            };
 
-        // Send a public notification
-        $notification->send('notification', 'leaves', [
-            'title' => 'Leave Request Updated',
-            'content' => 'A leave request has been updated.',
-        ]);
+            $notification->sendPrivateNotification(
+                'Status Cuti Diperbarui',
+                $message,
+                $leave->user_id
+            );
+        }
 
         return response()->json([
             'message' => 'Leave request updated successfully.',

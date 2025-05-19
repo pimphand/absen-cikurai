@@ -52,17 +52,22 @@ class NotificationService
     }
 
     /**
-     * Send news notification
+     * Send private notification to specific user
      *
-     * @param string $title News title
-     * @param string $content News content
+     * @param string $title Notification title
+     * @param string $content Notification content
+     * @param int $userId User ID to send notification to
      * @return bool
      */
-    public function sendPrivateNotification(string $title, string $content, int $id): bool
+    public function sendPrivateNotification(string $title, string $content, int $userId): bool
     {
-        return $this->send('notification', 'leaves-' . $id, [
-            'title' => $title,
-            'content' => $content
-        ]);
+        return $this->send(
+            'leaves-' . $userId,  // channel format: leaves-{userId}
+            'notification',       // event name
+            [
+                'title' => $title,
+                'content' => $content
+            ]
+        );
     }
 }
