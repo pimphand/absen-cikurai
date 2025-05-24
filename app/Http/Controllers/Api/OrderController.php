@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,5 +77,35 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    public function addPayment(Request $request, Order $order)
+    {
+        if (!Auth::user()->hasRole('debt-collector') || !Auth::user()->hasRole('admin')){
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        $request->validate([
+            'amount' => 'required|numeric',
+            'payment_method' => 'required|string',
+            'date' => 'required|date',
+        ]);
+
+        $order->payments()->create([
+            'amount' => $request->amount,
+            'payment_method' => $request->payment_method,
+            'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
+            'remaining' => $order->payments->first()->remaining - $request->amount,
+            'collector' => Auth::user()->name,
+            'user_id' => $order->user_id,
+            'customer_id' => $order->customer_id,
+            'method' => $request->payment_method,
+        ]);
+
+        return response()->json([
+            'message' => 'Payment added successfully',
+        ]);
     }
 }

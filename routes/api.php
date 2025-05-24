@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //admin
     Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
+    Route::apiResource('orders/add-payment/{id}', App\Http\Controllers\Api\OrderController::class);
 
     //group admin routes
     Route::group(['prefix' => 'admin'], function () {
