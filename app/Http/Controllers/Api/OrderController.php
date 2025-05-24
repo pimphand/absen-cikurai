@@ -102,13 +102,6 @@ class OrderController extends Controller
             'customer' => $order->customer->name,
         ]);
 
-        Log::alert('Payment added', [
-            'order_id' => $order->id,
-            'amount' => $request->amount,
-            'payment_method' => $request->payment_method,
-            'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
-        ]);
-
         $notification = new NotificationService();
 
         $notification->sendPrivateNotification(

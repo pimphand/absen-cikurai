@@ -70,4 +70,43 @@ class NotificationService
             ]
         );
     }
+
+    /**
+     * Send public notification to all users
+     *
+     * @param string $title Notification title
+     * @param string $content Notification content
+     * @return bool
+     */
+    public function sendPublicNotification(string $title, string $content): bool
+    {
+        return $this->send(
+            'notification',
+            'notification',
+            [
+                'title' => $title,
+                'content' => $content
+            ]
+        );
+    }
+
+    /**
+     * Send notification to specific group
+     *
+     * @param string $role Role Name
+     * @param string $title Notification title
+     * @param string $content Notification content
+     * @return bool
+     */
+    public function sendRoleNotification(string $role, string $title, string $content): bool
+    {
+        return $this->send(
+            $role,  // channel format: group-{group}
+            'notification',
+            [
+                'title' => $title,
+                'content' => $content
+            ]
+        );
+    }
 }
