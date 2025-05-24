@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Absen routes
     Route::apiResource('absen', AbsenController::class);
-    Route::get('absen/check-in', [AbsenController::class, 'hasCheckedInToday']);
+    Route::get('absen-check-in', [AbsenController::class, 'hasCheckedInToday']);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
