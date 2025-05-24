@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Service\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +104,24 @@ class OrderController extends Controller
             'customer_id' => $order->customer_id,
             'method' => $request->payment_method,
         ]);
+        $notification = new NotificationService();
+
+        $message = [
+            'title' => 'Pembayaran Diterima',
+            'body' => 'Pembayaran sebesar ' . $request->amount . ' telah diterima untuk order ' . $order->id,
+            'data' => [
+                'order_id' => $order->id,
+                'amount' => $request->amount,
+                'payment_method' => $request->payment_method,
+                'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
+            ],
+        ];
+
+        $notification->sendPrivateNotification(
+            'Status Cuti Diperbarui',
+            (string)$message,
+            $order->user_id
+        );
 
         return response()->json([
             'message' => 'Payment added successfully',
