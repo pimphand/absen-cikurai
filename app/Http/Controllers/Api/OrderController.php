@@ -93,7 +93,6 @@ class OrderController extends Controller
 
         $order->payments()->create([
             'amount' => $request->amount,
-            'payment_method' => $request->payment_method,
             'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
             'remaining' => $order->payments->first()->remaining - $request->amount,
             'collector' => Auth::user()->name,
