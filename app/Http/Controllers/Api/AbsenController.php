@@ -247,7 +247,7 @@ class AbsenController extends Controller
      */
     public function hasCheckedInToday(){
         $user = Auth::user();
-        $attendanceDate = now()->toDateString();
+        $attendanceDate = date('Y-m-d', strtotime('today'));
 
         $attendance = $user->attendance()->where('attendance_date', $attendanceDate)->first();
 
