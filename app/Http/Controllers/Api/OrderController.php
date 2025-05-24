@@ -99,6 +99,7 @@ class OrderController extends Controller
             'user_id' => $order->user_id,
             'customer_id' => $order->customer_id,
             'method' => $request->payment_method,
+            'customer' => $order->customer->name,
         ]);
 
         Log::alert('Payment added', [
