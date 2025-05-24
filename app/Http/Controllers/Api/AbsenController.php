@@ -241,4 +241,28 @@ class AbsenController extends Controller
     {
         //
     }
+
+    /**
+     * check if user has checked in today
+     */
+    public function hasCheckedInToday(){
+        $user = Auth::user();
+        $attendanceDate = now()->toDateString();
+
+        $attendance = Absen::where('user_id', $user->id)
+            ->where('attendance_date', $attendanceDate)
+            ->first();
+
+        if ($attendance) {
+            return response()->json([
+                'message' => 'You have already checked in today',
+                'checked_in' => true,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'You have not checked in today',
+            'checked_in' => false,
+        ]);
+    }
 }
