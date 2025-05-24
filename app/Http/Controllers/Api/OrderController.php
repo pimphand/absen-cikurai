@@ -110,20 +110,9 @@ class OrderController extends Controller
 
         $notification = new NotificationService();
 
-        $message = [
-            'title' => 'Pembayaran Diterima',
-            'body' => 'Pembayaran sebesar ' . $request->amount . ' telah diterima untuk order ' . $order->id,
-            'data' => [
-                'order_id' => $order->id,
-                'amount' => $request->amount,
-                'payment_method' => $request->payment_method,
-                'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
-            ],
-        ];
-
         $notification->sendPrivateNotification(
-            'Status Cuti Diperbarui',
-            (string)$message,
+            'Pembayaran berhasil',
+            "Pembayaran untuk order #{$order->id} telah berhasil ditambahkan. Jumlah: {$request->amount} {$request->payment_method}.",
             $order->user_id
         );
 
