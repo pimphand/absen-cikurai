@@ -9,6 +9,7 @@ use App\Service\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -104,6 +105,14 @@ class OrderController extends Controller
             'customer_id' => $order->customer_id,
             'method' => $request->payment_method,
         ]);
+
+        Log::alert('Payment added', [
+            'order_id' => $order->id,
+            'amount' => $request->amount,
+            'payment_method' => $request->payment_method,
+            'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
+        ]);
+
         $notification = new NotificationService();
 
         $message = [
