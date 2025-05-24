@@ -249,9 +249,7 @@ class AbsenController extends Controller
         $user = Auth::user();
         $attendanceDate = now()->toDateString();
 
-        $attendance = Absen::where('user_id', $user->id)
-            ->where('attendance_date', $attendanceDate)
-            ->first();
+        $attendance = $user->attendance()->where('attendance_date', $attendanceDate)->first();
 
         if ($attendance) {
             return response()->json([
