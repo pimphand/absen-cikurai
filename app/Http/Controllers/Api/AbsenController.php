@@ -196,27 +196,30 @@ class AbsenController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Absen $absen)
+    public function update(Request $request, Absen $absen): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
+        $error = null;
+
         if ($user->is_active === 0) {
-            return response()->json(['message' => 'User is not active'], 400);
+            $error = ['message' => 'User is not active', 'status' => 400];
+        } elseif ($absen->user_id !== $user->id) {
+            $error = ['message' => 'You are not authorized to update this attendance', 'status' => 403];
+        } else {
+            $attendanceDate = now()->toDateString();
+            $attendance = Absen::where('user_id', $user->id)
+                ->where('attendance_date', $attendanceDate)
+                ->first();
+
+            if (!$attendance) {
+                $error = ['message' => 'You have not checked in for today', 'status' => 400];
+            } elseif ($absen->check_out) {
+                $error = ['message' => 'You have already checked out for today', 'status' => 400];
+            }
         }
 
-        if ($absen->user_id !== $user->id) {
-            return response()->json(['message' => 'You are not authorized to update this attendance'], 403);
-        }
-
-        $attendanceDate = now()->toDateString();
-        $attendance = Absen::where('user_id', $user->id)
-            ->where('attendance_date', $attendanceDate)
-            ->first();
-        if (!$attendance) {
-            return response()->json(['message' => 'You have not checked in for today'], 400);
-        }
-
-        if ($absen->check_out) {
-            return response()->json(['message' => 'You have already checked out for today'], 400);
+        if ($error) {
+            return response()->json(['message' => $error['message']], $error['status']);
         }
 
         $absen->update([

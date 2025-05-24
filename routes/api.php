@@ -33,7 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
 
-    //admin routes
+    //admin
+    Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
+
     //group admin routes
     Route::group(['prefix' => 'admin'], function () {
         Route::apiResource('absen', App\Http\Controllers\Api\Admin\AbsenController::class);

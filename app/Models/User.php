@@ -72,4 +72,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Leave::class);
     }
+
+    /**
+     * relation to orders
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+    /**
+     * relation to orders dept collector
+     */
+    public function ordersDeptCollector(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class, 'collector_id', 'id');
+    }
 }
