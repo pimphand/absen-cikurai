@@ -100,7 +100,7 @@ class OrderController extends Controller
             'customer_id' => $order->customer_id,
             'method' => $request->payment_method,
             'customer' => $order->customer->name,
-            'file' => $request->file('image') ? $request->file('image')->store('payments') : null,
+            'file' => $request->file('image') ? $request->file('image')->store('payments','public') : null,
         ]);
 
         $notification = new NotificationService();
