@@ -84,11 +84,6 @@ class OrderController extends Controller
     public function addPayment(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-        if (!Auth::user()->hasRole('debt-collector') || !Auth::user()->hasRole('admin')){
-            return response()->json([
-                'message' => 'Unauthorized',
-            ], 403);
-        }
 
         $request->validate([
             'amount' => 'required|numeric',
