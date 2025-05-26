@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\AuthController;
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -32,7 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('absen-check-in', [AbsenController::class, 'hasCheckedInToday']);
 
     //products
-    Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
