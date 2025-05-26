@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\AuthController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
+Route::apiResource('banners', App\Http\Controllers\Api\BannerController::class);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

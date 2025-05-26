@@ -23,4 +23,6 @@ class Image extends Model
             $query->where('type', 'gallery');
         });
     }
+
+
 }

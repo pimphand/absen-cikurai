@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Support\Facades\Storage;
 class SkuResource extends JsonResource
 {
     /**
@@ -14,12 +14,13 @@ class SkuResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $url = Storage::disk('s3')->url($this->image->path);
         return [
             'id' => $this->id,
             'name' => $this->name,
             'packaging' => $this->packaging,
             'description' => $this->description,
-            'image' => $this->image->path ? str_replace('.png', '.webp', $this->image->path) : null,
+            'image' => $url,
             'brand' => $this->product->name,
             'category' => $this->product->category->name,
             'file' => $this->product->file ? asset('storage/'.$this->product->file) : null,
