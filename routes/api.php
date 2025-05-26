@@ -41,5 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //group admin routes
     Route::group(['prefix' => 'admin'], function () {
         Route::apiResource('absen', App\Http\Controllers\Api\Admin\AbsenController::class);
+        Route::apiResource('master-brand', \App\Http\Controllers\Api\BrandController::class);
     });
 });
