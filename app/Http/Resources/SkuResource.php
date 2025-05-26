@@ -14,7 +14,7 @@ class SkuResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $url = Storage::disk('s3')->url($this->image->path);
+        $url = Storage::disk('s3')->url(str_replace('.png', '.webp', $this->image->path));
         return [
             'id' => $this->id,
             'name' => $this->name,
