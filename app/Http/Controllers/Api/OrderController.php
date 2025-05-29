@@ -163,7 +163,42 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        return DB::transaction(function () use ($request, $order) {
+            $total = 0;
+            foreach ($request->id as $key => $sku) {
+                $item = $order->orderItems()->where('id', $sku)->first();
+                if ($request->quantity[$key] > 0) {
+                    if ($item) {
+                        $item->update([
+                            'returns' => $request->quantity[$key],
+                        ]);
+                    }
+                }
+                $total += $item->quantity * $item->price;
+            }
+
+            $user = $order->user()->first();
+            $user->achieved_sales += $total;
+            $user->save();
+
+            if ($request->status == 'retur') {
+                $order->status = 'process';
+                $order->is_return = true;
+            } else {
+                $order->status = 'success';
+                $order->tanggal_pengiriman = now();
+            }
+
+            $order->note = $request->note ?? $order->note;
+            $order->file = $request->file ?? $order->file;
+            $order->bukti_pengiriman = $request->file ?? $order->file;
+            $order->save();
+
+            return response()->json([
+                'message' => 'Order updated',
+                'request' => $request->all(),
+            ]);
+        });
     }
 
     /**
