@@ -163,6 +163,19 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
+        $validate = Validator::make($request->all(), [
+            'note' => 'nullable|string',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'quantity' => 'nullable|array',
+            'id' => 'required|array',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'message' => $validate->errors(),
+            ], 422);
+        }
+
         return DB::transaction(function () use ($request, $order) {
             $total = 0;
             foreach ($request->id as $key => $sku) {
