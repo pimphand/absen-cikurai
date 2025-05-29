@@ -42,6 +42,16 @@ class OrderController extends Controller
             return OrderResource::collection($data->paginate(10));
         }
 
+        if ($user->hasRole('sales')) {
+            $data = $user->orders()->with(['customer'])
+                ->when(request('search'), function ($query) {
+                    $query->whereHas('customer', function ($query) {
+                        $query->where('name', 'like', '%' . request('search') . '%');
+                    });
+                });
+            return OrderResource::collection($data->paginate(10));
+        }
+
         return  response()->json([
             'message' => 'terjadi kesalahan',
         ], 400);
