@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BannerResource;
 use App\Models\Banner;
 use App\Models\Gallery;
 use App\Models\Image;
@@ -18,7 +19,7 @@ class BannerController extends Controller
         $banners = Image::where('gallery_type', 'slide-banner')
             ->get();
 
-        return response()->json($banners);
+        return BannerResource::collection($banners);
     }
 
     /**
