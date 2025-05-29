@@ -33,14 +33,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('absen', AbsenController::class);
     Route::get('absen-check-in', [AbsenController::class, 'hasCheckedInToday']);
 
-    //products
+    //customers
+    Route::apiResource('customers', App\Http\Controllers\Api\CustomerController::class);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
 
     //admin
     Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
-    Route::post('orders/add-payment/{id}', [App\Http\Controllers\Api\OrderController::class,'addPayment']);
+    Route::post('orders/add-payment/{id}', [App\Http\Controllers\Api\OrderController::class, 'addPayment']);
 
     //group admin routes
     Route::group(['prefix' => 'admin'], function () {
