@@ -33,7 +33,7 @@ class OrderController extends Controller
         }
 
         if ($user->hasRole('driver')) {
-            $data = Order::with(['customer'])
+            $data = $user->orderDrivers()->with(['customer'])
                 ->when(request('search'), function ($query) {
                     $query->whereHas('customer', function ($query) {
                         $query->where('name', 'like', '%' . request('search') . '%');

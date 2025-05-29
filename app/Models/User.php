@@ -87,4 +87,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'collector_id', 'id');
     }
+
+    /**
+     * relation to orders driver
+     */
+    public function orderDrivers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class, 'driver_id', 'id');
+    }
 }
