@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Sku;
 use App\Service\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -19,7 +23,7 @@ class OrderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if ($user->hasRole('debt-collector')){
+        if ($user->hasRole('debt-collector')) {
             $data = $user->ordersDeptCollector()->when(request('search'), function ($query) {
                 $query->whereHas('customer', function ($query) {
                     $query->where('name', 'like', '%' . request('search') . '%');
@@ -28,7 +32,7 @@ class OrderController extends Controller
             return OrderResource::collection($data->paginate(10));
         }
 
-        if($user->hasRole('driver')){
+        if ($user->hasRole('driver')) {
             $data = Order::with(['customer'])
                 ->when(request('search'), function ($query) {
                     $query->whereHas('customer', function ($query) {
@@ -40,7 +44,7 @@ class OrderController extends Controller
 
         return  response()->json([
             'message' => 'terjadi kesalahan',
-        ],400);
+        ], 400);
     }
 
     /**
@@ -54,9 +58,78 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'customer_id' => 'required|exists:customers,id',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|exists:skus,id',
+            'items.*.quantity' => 'required|integer',
+        ], [
+            'items.*.product_id.exists' => 'Produk tidak ditemukan',
+            'items.*.quantity.integer' => 'Jumlah harus berupa angka',
+            'items.*.quantity.required' => 'Jumlah harus diisi',
+            'items.*.product_id.required' => 'Produk harus diisi',
+            'customer_id.required' => 'Customer harus diisi',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'message' => $validate->errors(),
+            ], 422);
+        }
+
+        return DB::transaction(function () use ($request) {
+            $order = Order::create([
+                'customer_id' => $request->customer_id,
+                'status' => 'pending',
+                'discount' => $request->discount ?? 0,
+                'user_id' => $request->sales_id ?? Auth::id(),
+            ]);
+            $total = 0;
+            foreach ($request->items as $key => $value) {
+                $sku = Sku::find($value['product_id']);
+                OrderItem::create([
+                    'quantity' => $value['quantity'],
+                    'sku_id' => $sku->id,
+                    'price' => $value['price'] ?? 0,
+                    'total' => $value['quantity'] * ($value['price'] ?? 0),
+                    'order_id' => $order->id,
+                ]);
+
+                $items[] = [
+                    'product_id' => $value['product_id'],
+                    'quantity' => $value['quantity'],
+                    'name' => $sku->name,
+                    'brand' => $sku->product->name,
+                    'category' => $sku->product->category->name,
+                    'image' => $sku->image->path ?? null,
+                    'package' => $sku->packaging,
+                ];
+
+                $sku->total_order += $value['quantity'];
+                $sku->save();
+
+                $total += $value['quantity'] * ($value['price'] ?? 0);
+            }
+
+            $order->payments()->create([
+                'method' => "System",
+                'date' => now(),
+                'amount' => 0,
+                'remaining' => $total,
+                'customer' => $order->customer->store_name,
+                'collector' => "System",
+                'admin' => "System",
+            ]);
+
+            $order->items = $items;
+            $order->save();
+
+            return response()->json([
+                'message' => 'Order created',
+            ]);
+        });
     }
 
     /**
@@ -110,7 +183,7 @@ class OrderController extends Controller
             'customer_id' => $order->customer_id,
             'method' => $request->payment_method,
             'customer' => $order->customer->name,
-            'file' => $request->file('image') ? $request->file('image')->store('payments','public') : null,
+            'file' => $request->file('image') ? $request->file('image')->store('payments', 'public') : null,
         ]);
 
         $notification = new NotificationService();
