@@ -98,13 +98,13 @@ class OrderController extends Controller
                 'user_id' => $request->sales_id ?? Auth::id(),
             ]);
             $total = 0;
-            foreach ($request->quantity as $key => $value) {
-                $sku = Sku::find($request->id[$key]);
+            foreach ($request->items as $key => $value) {
+                $sku = Sku::find($value['product_id']);
                 OrderItem::create([
-                    'quantity' => $value,
+                    'quantity' => $value['quantity'],
                     'sku_id' => $sku->id,
                     'price' => $value['price'] ?? 0,
-                    'total' => $value * ($value['price'] ?? 0),
+                    'total' => $value['quantity'] * ($value['price'] ?? 0),
                     'order_id' => $order->id,
                 ]);
 
@@ -176,7 +176,7 @@ class OrderController extends Controller
                 'message' => $validate->errors(),
             ], 422);
         }
-
+        Log::alert(json_encode($request->all()));
         return DB::transaction(function () use ($request, $order) {
             $total = 0;
             foreach ($request->id as $key => $sku) {
