@@ -162,7 +162,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request,  $id)
     {
         $validate = Validator::make($request->all(), [
             'note' => 'nullable|string',
@@ -176,7 +176,7 @@ class OrderController extends Controller
                 'message' => $validate->errors(),
             ], 422);
         }
-
+        $order = Order::findOrFail($id);
         Log::alert(json_encode($request->all()));
         return DB::transaction(function () use ($request, $order) {
             $total = 0;
