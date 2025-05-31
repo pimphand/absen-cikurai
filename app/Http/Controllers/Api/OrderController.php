@@ -195,7 +195,7 @@ class OrderController extends Controller
             }
 
             $user = $order->user()->first();
-            $user->achieved_sales += $total;
+            $user->achieved_sales += $total ?? 0;
             $user->save();
 
             if ($request->status == 'retur') {
