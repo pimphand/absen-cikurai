@@ -177,15 +177,6 @@ class OrderController extends Controller
             ], 422);
         }
 
-        // Validate that all IDs exist in the order
-        foreach ($request->id as $id) {
-            if (!$order->orderItems()->where('id', $id)->exists()) {
-                return response()->json([
-                    'message' => "Order item with ID {$id} not found in this order",
-                ], 422);
-            }
-        }
-
         Log::alert(json_encode($request->all()));
         return DB::transaction(function () use ($request, $order) {
             $total = 0;
