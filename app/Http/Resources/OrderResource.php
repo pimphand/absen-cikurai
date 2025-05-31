@@ -26,6 +26,10 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'paid' => (int)$this->payments->sum('amount'),
             'remaining' => (int)$this->payments->first()->remaining,
+            'shipped_at' => $this->tanggal_pengiriman,
+            'note' => $this->note,
+            'file' => $this->file,
+            'bukti_pengiriman' => $this->bukti_pengiriman,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
