@@ -72,9 +72,10 @@ class OrderController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:skus,id',
-            'items.*.quantity' => 'required|integer',
+            'quantity' => 'required|array',
+            'product_id' => 'required|array',
+            'product_id.*' => 'required|exists:skus,id',
+            'quantity.*' => 'required|integer',
         ], [
             'items.*.product_id.exists' => 'Produk tidak ditemukan',
             'items.*.quantity.integer' => 'Jumlah harus berupa angka',
