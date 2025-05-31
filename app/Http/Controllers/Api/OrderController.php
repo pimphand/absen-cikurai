@@ -194,9 +194,12 @@ class OrderController extends Controller
                 }
             }
 
-            // $user = $order->user()->first();
-            // $user->achieved_sales += $total ?? 0;
-            // $user->save();
+            // Handle file upload
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $path = $file->store('public/orders');
+                $fileUrl = asset('storage/' . str_replace('public/', '', $path));
+            }
 
             if ($request->status == 'retur') {
                 $order->status = 'process';
@@ -207,13 +210,17 @@ class OrderController extends Controller
             }
 
             $order->note = $request->note ?? $order->note;
-            $order->file = $request->file ?? $order->file;
-            $order->bukti_pengiriman = $request->file ?? $order->file;
+            $order->file = $fileUrl ?? $order->file;
+            $order->bukti_pengiriman = $fileUrl ?? $order->file;
             $order->save();
 
             return response()->json([
                 'message' => 'Order updated',
-                'request' => $request->all(),
+                'data' => [
+                    'file_url' => $fileUrl ?? null,
+                    'note' => $order->note,
+                    'status' => $order->status,
+                ]
             ]);
         });
     }
