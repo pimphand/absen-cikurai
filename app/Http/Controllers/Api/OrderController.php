@@ -70,6 +70,7 @@ class OrderController extends Controller
      */
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
+        Log::info(json_encode($request->all()));
         $validate = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
             'quantity' => 'required|array',
@@ -164,7 +165,7 @@ class OrderController extends Controller
      */
     public function update(Request $request,  $id)
     {
-        Log::alert(json_encode($request->all()));
+        Log::info(json_encode($request->all()));
         $validate = Validator::make($request->all(), [
             'note' => 'nullable|string',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
