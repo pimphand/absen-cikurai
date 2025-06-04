@@ -198,9 +198,13 @@ class OrderController extends Controller
 
             // Handle file upload
             if ($request->hasFile('file')) {
-                $file = $request->file(key: 'file');
-                $path = $file->store('public/orders');
-                $fileUrl = asset('storage/' . str_replace('public/', '', $path));
+                $file = $request->file('file');
+
+                // Simpan file ke storage/app/public/orders
+                $path = $file->store('orders', 'public');
+
+                // Buat URL yang dapat diakses secara publik (pastikan storage:link sudah dijalankan)
+                $fileUrl = asset('storage/' . $path);
             }
 
             if ($request->status == 'retur') {
