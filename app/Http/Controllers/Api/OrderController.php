@@ -164,6 +164,7 @@ class OrderController extends Controller
      */
     public function update(Request $request,  $id)
     {
+        Log::alert(json_encode($request->all()));
         $validate = Validator::make($request->all(), [
             'note' => 'nullable|string',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
@@ -177,7 +178,7 @@ class OrderController extends Controller
             ], 422);
         }
         $order = Order::findOrFail($id);
-        Log::alert(json_encode($request->all()));
+
         return DB::transaction(function () use ($request, $order) {
             $total = 0;
             foreach ($request->id as $key => $sku) {
@@ -196,7 +197,7 @@ class OrderController extends Controller
 
             // Handle file upload
             if ($request->hasFile('file')) {
-                $file = $request->file('file');
+                $file = $request->file(key: 'file');
                 $path = $file->store('public/orders');
                 $fileUrl = asset('storage/' . str_replace('public/', '', $path));
             }
