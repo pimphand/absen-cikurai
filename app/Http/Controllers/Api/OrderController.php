@@ -99,19 +99,19 @@ class OrderController extends Controller
                 'user_id' => $request->sales_id ?? Auth::id(),
             ]);
             $total = 0;
-            foreach ($request->items as $key => $value) {
-                $sku = Sku::find($value['product_id']);
+            foreach ($request->quantity as $key => $value) {
+                $sku = Sku::find($request->product_id[$key]);
                 OrderItem::create([
-                    'quantity' => $value['quantity'],
+                    'quantity' => $value,
                     'sku_id' => $sku->id,
-                    'price' => $value['price'] ?? 0,
-                    'total' => $value['quantity'] * ($value['price'] ?? 0),
+                    'price' => $request->price[$key] ?? 0,
+                    'total' => $value * ($request->price[$key] ?? 0),
                     'order_id' => $order->id,
                 ]);
 
                 $items[] = [
-                    'product_id' => $value['product_id'],
-                    'quantity' => $value['quantity'],
+                    'product_id' => $sku->product_id,
+                    'quantity' => $value,
                     'name' => $sku->name,
                     'brand' => $sku->product->name,
                     'category' => $sku->product->category->name,
@@ -119,10 +119,10 @@ class OrderController extends Controller
                     'package' => $sku->packaging,
                 ];
 
-                $sku->total_order += $value['quantity'];
+                $sku->total_order += $value;
                 $sku->save();
 
-                $total += $value['quantity'] * ($value['price'] ?? 0);
+                $total += $value * ($request->price[$key] ?? 0);
             }
 
             $order->payments()->create([
