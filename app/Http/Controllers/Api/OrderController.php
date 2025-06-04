@@ -28,7 +28,7 @@ class OrderController extends Controller
                 $query->whereHas('customer', function ($query) {
                     $query->where('name', 'like', '%' . request('search') . '%');
                 });
-            });
+            })->orderBy('created_at', 'desc');
             return OrderResource::collection($data->paginate(10));
         }
 
@@ -38,7 +38,7 @@ class OrderController extends Controller
                     $query->whereHas('customer', function ($query) {
                         $query->where('name', 'like', '%' . request('search') . '%');
                     });
-                });
+                })->orderBy('created_at', 'desc');
             return OrderResource::collection($data->paginate(10));
         }
 
@@ -48,7 +48,7 @@ class OrderController extends Controller
                     $query->whereHas('customer', function ($query) {
                         $query->where('name', 'like', '%' . request('search') . '%');
                     });
-                });
+                })->orderBy('created_at', 'desc');
             return OrderResource::collection($data->paginate(10));
         }
 
