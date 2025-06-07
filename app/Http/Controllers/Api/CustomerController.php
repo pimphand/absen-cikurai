@@ -27,7 +27,7 @@ class CustomerController extends Controller
         }
 
         if (!$request->has('is_blacklist')) {
-            $customers->where('user_id', auth()->user()->id);
+            $customers->where('user_id', auth()->user()->id)->where('is_blacklist', 0);
         }
 
         return CustomerResource::collection($customers->paginate($request->per_page));
