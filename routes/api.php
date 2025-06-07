@@ -36,7 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('absen-check-in', [AbsenController::class, 'hasCheckedInToday']);
 
     //customers
-    Route::apiResource('customers', App\Http\Controllers\Api\CustomerController::class);
+    Route::get('customers', [App\Http\Controllers\Api\CustomerController::class,'index']);
+    Route::post('customers', [App\Http\Controllers\Api\CustomerController::class,'store']);
+    Route::post('customers/{id}', [App\Http\Controllers\Api\CustomerController::class,'update']);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
