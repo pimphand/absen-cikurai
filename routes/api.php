@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('customers', [App\Http\Controllers\Api\CustomerController::class,'index']);
     Route::post('customers', [App\Http\Controllers\Api\CustomerController::class,'store']);
     Route::post('customers/{id}', [App\Http\Controllers\Api\CustomerController::class,'update']);
+    Route::delete('customers/{id}', [App\Http\Controllers\Api\CustomerController::class,'destroy']);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
