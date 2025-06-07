@@ -100,8 +100,12 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy($id)
     {
-        //
+        $customer = Auth::user()->customers()->findOrFail($id);
+        $customer->is_blacklist = 1;
+        $customer->save();
+
+        return response()->json(['message' => 'Customer deleted']);
     }
 }
