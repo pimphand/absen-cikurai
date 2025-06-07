@@ -24,6 +24,11 @@ class ProductController extends Controller
             ->when($request->name, function ($query, $name) {
                 return $query->where('name', 'like', '%'.$name.'%');
             })
+            ->when($request->brand, function ($query, $brand) {
+                return $query->whereHas('product', function ($query) use ($brand) {
+                    return $query->where('name', 'like', '%'.$brand.'%');
+                });
+            })
             ->orderBy('total_order', 'desc')
             ->paginate(12);
 
