@@ -97,7 +97,7 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'driver_id', 'id');
     }
 
-    public function customers(): HasMany
+    public function customers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Customer::class);
     }
