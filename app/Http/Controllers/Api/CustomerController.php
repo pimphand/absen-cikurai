@@ -72,9 +72,29 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = Validator::make($request->all(), [
+            'name' => 'required',
+            'phone' => 'required|numeric|digits_between:10,13|unique:customers,phone',
+            'address' => 'required|',
+            //            'owner_address' => 'required',
+            'store_name' => 'required',
+            'store_photo' => 'nullable',
+            'owner_photo' => 'nullable',
+            'identity' => 'nullable',
+            'npwp' => 'nullable',
+            'others' => 'nullable',
+            'city' => 'required',
+            'state' => 'required',
+        ]);
+        $customer = Auth::user()->customers()->findOrFail($id);
+        $customer->update(array_merge($validated->validated(), [
+            'store_photo' => $request->file('store_photo') ? asset('storage') . '/' . $request->file('store_photo')->store('customer/store_photo', 'public') : $customer->store_photo,
+            'owner_photo' => $request->file('owner_photo') ? asset('storage') . '/' . $request->file('owner_photo')->store('customer/owner_photo', 'public') : $customer->owner_photo,
+        ]));
+
+        return response()->json(['message' => 'Customer updated']);
     }
 
     /**
