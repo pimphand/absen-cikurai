@@ -22,6 +22,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::apiResource('products', App\Http\Controllers\Api\ProductController::class);
 Route::apiResource('banners', App\Http\Controllers\Api\BannerController::class);
 
+Route::get('brands', [App\Http\Controllers\Api\BrandController::class, 'index']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
