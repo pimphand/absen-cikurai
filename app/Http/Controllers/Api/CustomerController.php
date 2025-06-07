@@ -76,7 +76,7 @@ class CustomerController extends Controller
     {
         $validated = Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'required|numeric|digits_between:10,13|unique:customers,phone',
+            'phone' => 'required|numeric|digits_between:10,13|unique:customers,phone,' . $id,
             'address' => 'required|',
             //            'owner_address' => 'required',
             'store_name' => 'required',
