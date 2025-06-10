@@ -17,7 +17,6 @@ class ProductController extends Controller
     public function index()
     {
         $products = QueryBuilder::for(Product::class)
-            ->with('image')
             ->with('category')
             ->withCount('skus')
             ->allowedFilters(['name', 'category.name', 'skus.name'])
