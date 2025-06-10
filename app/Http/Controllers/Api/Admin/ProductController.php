@@ -39,7 +39,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return new ProductResource($product->withCount('skus')->load(['category', 'skus']));
+        return new ProductResource($product->loadCount('skus')->load(['category', 'skus']));
     }
 
     /**
