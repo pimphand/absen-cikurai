@@ -18,7 +18,7 @@ class AbsenController extends Controller
         $absen = QueryBuilder::for(Absen::class)
             ->with('user:id,name')
             ->with('user.roles')
-            ->allowedFilters(['user.name', 'status'])
+            ->allowedFilters(['user.name', 'status', 'user.roles.name'])
             ->allowedSorts(['created_at'])
             ->paginate(25);
         return AbsenResource::collection($absen);
