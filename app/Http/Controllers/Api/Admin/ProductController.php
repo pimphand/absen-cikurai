@@ -19,6 +19,7 @@ class ProductController extends Controller
         $products = QueryBuilder::for(Product::class)
             ->with('category')
             ->withCount('skus')
+            ->with('skus')
             ->allowedFilters(['name', 'category.name', 'skus.name'])
             ->allowedSorts(['created_at'])
             ->paginate(25);
