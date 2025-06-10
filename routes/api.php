@@ -36,10 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('absen-check-in', [AbsenController::class, 'hasCheckedInToday']);
 
     //customers
-    Route::get('customers', [App\Http\Controllers\Api\CustomerController::class,'index']);
-    Route::post('customers', [App\Http\Controllers\Api\CustomerController::class,'store']);
-    Route::post('customers/{id}', [App\Http\Controllers\Api\CustomerController::class,'update']);
-    Route::delete('customers/{id}', [App\Http\Controllers\Api\CustomerController::class,'destroy']);
+    Route::get('customers', [App\Http\Controllers\Api\CustomerController::class, 'index']);
+    Route::post('customers', [App\Http\Controllers\Api\CustomerController::class, 'store']);
+    Route::post('customers/{id}', [App\Http\Controllers\Api\CustomerController::class, 'update']);
+    Route::delete('customers/{id}', [App\Http\Controllers\Api\CustomerController::class, 'destroy']);
 
     // Leave routes
     Route::apiResource('leaves', App\Http\Controllers\LeaveController::class);
@@ -53,5 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'admin'], function () {
         Route::apiResource('absen', App\Http\Controllers\Api\Admin\AbsenController::class);
         Route::apiResource('master-brand', \App\Http\Controllers\Api\BrandController::class);
+
+        Route::apiResource('products', App\Http\Controllers\Api\Admin\ProductController::class);
     });
 });
