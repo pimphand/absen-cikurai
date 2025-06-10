@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AbsenResource;
 use App\Models\Absen;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -20,10 +21,7 @@ class AbsenController extends Controller
             ->allowedFilters(['user.name', 'status'])
             ->allowedSorts(['created_at'])
             ->paginate(25);
-        return response()->json([
-            'message' => 'Absen list',
-            'data' => $absen,
-        ]);
+        return AbsenResource::collection($absen);
     }
 
     /**
