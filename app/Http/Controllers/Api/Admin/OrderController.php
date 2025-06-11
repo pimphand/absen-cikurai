@@ -23,6 +23,8 @@ class OrderController extends Controller
                 'user.name',
                 'customer.name',
                 'driver.name',
+                'collector.name',
+                'sales.name',
             ])
             ->allowedSorts(['created_at', 'status'])
             ->defaultSort('-created_at')
