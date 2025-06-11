@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,7 +25,7 @@ class OrderResource extends JsonResource
             'payments' => $this->whenLoaded('payments', OrderPaymentResource::collection($this->payments)),
             'quantity' => (int)$this->orderItems->sum('quantity'),
             'total_price' => (int)$this->orderItems->sum('total'),
-            'status' => $this->status,
+            'status' => Order::Status($this->status),
             'paid' => (int)$this->payments->sum('amount'),
             'remaining' => (int)$this->payments->first()->remaining,
             'shipped_at' => $this->tanggal_pengiriman,

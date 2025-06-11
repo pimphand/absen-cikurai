@@ -74,4 +74,16 @@ class Order extends Model
         return $this->belongsTo(User::class, 'collector_id');
     }
 
+    public static function Status($status): string
+    {
+        return match ($status) {
+            'draft' => 'Draft',
+            'pending' => 'Pending',
+            'process' => 'Di Proses',
+            'shipped' => 'Terkirim',
+            'succcess' => 'Sukses',
+            'cancelled' => 'Cancelled',
+            default => 'Unknown Status',
+        };
+    }
 }
