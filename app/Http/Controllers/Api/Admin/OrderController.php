@@ -46,7 +46,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load(['user', 'customer', 'driver', 'orderItems', 'payments', 'collector']);
+        return OrderResource::make($order);
     }
 
     /**
