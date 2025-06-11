@@ -68,4 +68,10 @@ class Order extends Model
     {
         return $this->hasOne(Payment::class)->orderBy('date', 'desc');
     }
+
+    public function collector(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'collector_id');
+    }
+
 }

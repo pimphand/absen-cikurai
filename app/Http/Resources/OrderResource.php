@@ -19,6 +19,7 @@ class OrderResource extends JsonResource
             'sales' => new UserResouce($this->user),
             'customer' => new CustomerResource($this->customer),
             'shipper' => new UserResouce($this->driver),
+            'collector' => new UserResouce($this->collector),
             'items' => OrderItemResource::collection($this->orderItems),
             'payments' => $this->whenLoaded('payments', OrderPaymentResource::collection($this->payments)),
             'quantity' => (int)$this->orderItems->sum('quantity'),
