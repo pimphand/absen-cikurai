@@ -55,5 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('master-brand', \App\Http\Controllers\Api\BrandController::class);
 
         Route::apiResource('products', App\Http\Controllers\Api\Admin\ProductController::class);
+        Route::apiResource('categories', App\Http\Controllers\Api\Admin\CategoryController::class);
+        Route::apiResource('brands', App\Http\Controllers\Api\Admin\BrandController::class);
     });
 });
