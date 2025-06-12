@@ -22,6 +22,7 @@ class OrderItemResource extends JsonResource
             'total' => (int)$this->total,
             'price' => (int)$this->price,
             'returns' => (int)$this->returns,
+            'discount' => (int)$this->discount,
         ];
     }
 }
