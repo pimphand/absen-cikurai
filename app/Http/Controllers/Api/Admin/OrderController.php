@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -16,7 +17,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = QueryBuilder::for(Order::class)
-            ->with(['user', 'customer', 'driver', 'orderItems', 'payments','collector'])
+            ->with(['user', 'customer', 'driver', 'orderItems', 'payments', 'collector'])
             ->allowedFilters([
                 'status',
                 'created_at',
@@ -67,6 +68,26 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Invalid request type'
         ], 400);
+    }
+
+    /**
+     * Add updateItem to the order.
+     */
+    public function updateItem(Request $request, OrderItem $order)
+    {
+        $orderItem = OrderItem::findOrFail($order->id);
+        $orderItem->update([
+            'quantity' => $request->quantity ?? $orderItem->quantity,
+            'price' => $request->price ?? $orderItem->price,
+            'subtotal' => $request->subtotal ?? $orderItem->subtotal,
+            'discount' => $request->discount ?? $orderItem->discount,
+            'is_percentage' => $request->is_percentage ?? $orderItem->is_percentage,
+        ]);
+
+        return response()->json([
+            'message' => 'Order item updated successfully',
+            'data' => $orderItem
+        ]);
     }
 
     /**

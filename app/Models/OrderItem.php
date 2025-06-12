@@ -20,6 +20,8 @@ class OrderItem extends Model
         'returns',
         'return_reason',
         'file',
+        'is_percentage',
+        'discount',
     ];
 
     public function order(): BelongsTo
