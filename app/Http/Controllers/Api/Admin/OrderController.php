@@ -57,9 +57,9 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         if ($request->type = "edit-customer") {
-            $order->user_id = $request->sales_id;
-            $order->driver_id = $request->shipper_id;
-            $order->collector_id = $request->collector_id;
+            $order->user_id = $request->sales_id ?? $order->user_id;
+            $order->driver_id = $request->shipper_id ?? $order->driver_id;
+            $order->collector_id = $request->collector_id ?? $order->collector_id;
             $order->save();
             $order->load(['user', 'customer', 'driver', 'orderItems', 'payments', 'collector']);
             return OrderResource::make($order);
