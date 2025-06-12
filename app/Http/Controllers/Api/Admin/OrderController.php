@@ -56,7 +56,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         if ($request->type = "edit-customer") {
-            $order->sales_id = $request->sales_id;
+            $order->user_id = $request->sales_id;
             $order->driver_id = $request->shipper_id;
             $order->collector_id = $request->collector_id;
             $order->save();
