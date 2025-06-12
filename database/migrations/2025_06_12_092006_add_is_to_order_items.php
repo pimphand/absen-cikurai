@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table(table: 'order_items', function (Blueprint $table) {
+        Schema::table('order_items', function (Blueprint $table) {
             $table->boolean('is_percentage')
                 ->default(false)
                 ->after('price');

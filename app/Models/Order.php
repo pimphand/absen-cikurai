@@ -31,6 +31,7 @@ class Order extends Model
         'tanggal_pengiriman',
         'paid',
         'collector_id',
+        'type_discount',
     ];
 
     protected $casts = [

@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('categories', App\Http\Controllers\Api\Admin\CategoryController::class);
         Route::apiResource('brands', App\Http\Controllers\Api\Admin\BrandController::class);
         Route::apiResource('orders', App\Http\Controllers\Api\Admin\OrderController::class);
-        Route::put('orders/items/{id}', [App\Http\Controllers\Api\Admin\OrderController::class, 'updateItem']);
+        Route::put('orders/items/{order}', [App\Http\Controllers\Api\Admin\OrderController::class, 'updateItem']);
 
         Route::apiResource('users', App\Http\Controllers\Api\Admin\UserController::class);
     });

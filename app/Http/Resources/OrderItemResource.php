@@ -23,6 +23,7 @@ class OrderItemResource extends JsonResource
             'price' => (int)$this->price,
             'returns' => (int)$this->returns,
             'discount' => (int)$this->discount,
+            'is_percentage' => (bool)$this->is_percentage,
         ];
     }
 }
