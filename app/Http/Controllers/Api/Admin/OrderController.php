@@ -60,8 +60,13 @@ class OrderController extends Controller
             $order->driver_id = $request->shipper_id;
             $order->collector_id = $request->collector_id;
             $order->save();
-            return response()->json(['message' => 'Customer updated successfully']);
+            $order->load(['user', 'customer', 'driver', 'orderItems', 'payments', 'collector']);
+            return OrderResource::make($order);
         }
+
+        return response()->json([
+            'message' => 'Invalid request type'
+        ], 400);
     }
 
     /**
