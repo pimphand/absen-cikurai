@@ -61,5 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('orders/items/{order}', [App\Http\Controllers\Api\Admin\OrderController::class, 'updateItem']);
 
         Route::apiResource('users', App\Http\Controllers\Api\Admin\UserController::class);
+
+        // Dashboard route
+        Route::get('dashboard', [App\Http\Controllers\Api\Admin\DashboardController::class, 'index']);
     });
 });
