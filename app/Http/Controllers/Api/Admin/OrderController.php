@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class OrderController extends Controller
@@ -104,5 +107,35 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+    /**
+     * add payment to order
+     */
+
+    public function addPayment(Request $request, Order $order)
+    {
+        return DB::transaction(function () use ($request, $order) {
+            $order->payments()->create([
+                'method' => $request->method,
+                'date' => Carbon::parse($request->date)->toDateString() . ' ' . now()->toTimeString(),
+                'amount' => $request->amount,
+                'remaining' => $order->payment()->first()->remaining - $request->amount,
+                'customer' => $order->customer->name,
+                'collector' => Auth::user()->name,
+                'user_id' => $order->user_id,
+                'customer_id' => $order->customer_id,
+            ]);
+
+            if ($request->paid) {
+                $order->paid = $request->paid;
+                $order->status = 'success';
+                $order->save();
+            }
+
+            return response()->json([
+                'message' => 'Payment created',
+            ]);
+        });
     }
 }

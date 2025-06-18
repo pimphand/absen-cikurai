@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('brands', App\Http\Controllers\Api\Admin\BrandController::class);
         Route::apiResource('orders', App\Http\Controllers\Api\Admin\OrderController::class);
         Route::put('orders/items/{order}', [App\Http\Controllers\Api\Admin\OrderController::class, 'updateItem']);
+        Route::post('orders/{order}/payments', [App\Http\Controllers\Api\Admin\OrderController::class, 'addPayment']);
 
         Route::apiResource('users', App\Http\Controllers\Api\Admin\UserController::class);
 
